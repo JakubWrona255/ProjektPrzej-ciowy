@@ -3,15 +3,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
 
-model = tf.keras.models.load_model('Model1.')
+model = tf.keras.models.load_model('Model_CIFAR10_trained_10epochs')
 
-image = cv.imread('pismo_4.png')
-image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-#_,image = cv.threshold(image,120,1,cv.THRESH_BINARY_INV)
-image = 255-image
+image = cv.imread('dog_1.png')
 
-imageR = np.reshape(image, (1, 28, 28))
+image = image
+
+imageR = np.expand_dims(image,0)
 prediction = np.argmax(model.predict(imageR))
+
 print(prediction)
 
 plt.imshow(image)
