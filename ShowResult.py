@@ -1,19 +1,29 @@
-import tensorflow as tf
-import numpy as np
-import matplotlib.pyplot as plt
-import cv2 as cv
+from imports import *
+from model import loadModel
+from dataProcessing import *
 
-model = tf.keras.models.load_model('Model_CIFAR10_trained_10epochs')
 
-image = cv.imread('dog_1.png')
+def showResultClassification(model,num):
 
-image = image
+    image = loadImage(num)
+    image = cv2.resize(image, IMAGE_SIZE_CV)
+    image = image / 255.0
+    result = model.predict(np.array([image]))
+    output = image.copy()
 
-imageR = np.expand_dims(image,0)
-prediction = np.argmax(model.predict(imageR))
+    height, width, _ = output.shape
 
-print(prediction)
+    res = np.argmax(result)
+    if res == 0:
+        text = "object"
+    elif res == 1:
+        text = "background"
+    else:
+        text = "error"
 
-plt.imshow(image)
-plt.title(prediction)
-plt.show()
+    output = cv2.putText(output, text, (10,10),cv2.FONT_HERSHEY_SIMPLEX,0.3, (0, 255, 0), thickness=1)
+
+    cv2.namedWindow("picture", cv2.WINDOW_NORMAL)
+    cv2.imshow('picture', output)
+    cv2.waitKey(0)
+
